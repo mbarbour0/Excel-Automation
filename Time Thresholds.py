@@ -113,12 +113,13 @@ for a, b in sorted_dict2:
 
 matplotlib.rcParams.update({'xtick.labelsize': 14})
 plt.figure(figsize=(22, 10))
-plt.bar(range(len(names)), results, edgecolor = 'black', color = 'blue', alpha = 0.7, linewidth = 3.0)
+plt.bar(range(len(names)), results, edgecolor = 'black', color = '#39c7f1', alpha = 0.7, linewidth = 3.0)
 
 
 ax = plt.subplot()
 ax.set_xticks(range(len(names)))
 ax.set_xticklabels(names)
+ax.grid(color='red')
 
 plt.ylabel('Efficiency')
 plt.xlabel('Colleague')
