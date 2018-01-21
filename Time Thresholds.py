@@ -1,20 +1,16 @@
+import warnings; warnings.simplefilter("ignore")
 import openpyxl
-import os
-import datetime
-import time
+import matplotlib
+from matplotlib import pyplot as plt
+import matplotlib.style as style
+import seaborn as sns; sns.set()
+import operator
+style.use('fivethirtyeight')
 
 
-wb = openpyxl.load_workbook('UR.xlsx')
-
-# print(type(wb))
-# print(os.getcwd())
-# print(wb.get_sheet_names())
-
-sheet = wb.get_sheet_by_name('Sheet1')
-
-# print(sheet)
-
-print(sheet.title)
+wb = openpyxl.load_workbook('Book1.xlsx')
+sheet = wb.get_sheet_by_name('Sheet_1')
+print("This sheet is titled {}.".format(sheet.title))
 
 
 def get_sec(time_str):
@@ -25,7 +21,7 @@ def get_sec(time_str):
         pass
 
 
-def breaklunch(arg1):
+def brkl(arg1):
     
     # 1st day
     
@@ -49,7 +45,7 @@ def breaklunch(arg1):
     elif arg1 < 22:
         return 2.55
     
-    #3rd day
+    # 3rd day
     
     elif arg1 < 24:
         return 3.05
@@ -61,33 +57,85 @@ def breaklunch(arg1):
         return 4.15
 
 
-'''available_start = str(sheet.cell(row=9, column=16).value)
-inbound_start = str(sheet.cell(row=9, column=17).value)
-outbound_start = str(sheet.cell(row=9, column=18).value)
-hold_start = str(sheet.cell(row=9, column=20).value)
-total_time = str(sheet.cell(row=9, column=21).value)'''
+"""Locations of source data"""
+# avlb = str(sheet.cell(row=9, column=16).value)
+# ibnd = str(sheet.cell(row=9, column=17).value)
+# outb = str(sheet.cell(row=9, column=18).value)
+# hold = str(sheet.cell(row=9, column=20).value)
+# ttl = str(sheet.cell(row=9, column=21).value)
 
 
-holder = {}
+dict1 = {}
 
 
-for i in range(1, 77):
-    name = str(sheet.cell(row = i + 9, column = 3).value)
-    a = str(sheet.cell(row = i + 9, column = 16).value)
-    b = str(sheet.cell(row = i + 9, column = 17).value)
-    c = str(sheet.cell(row = i + 9, column = 18).value)
-    d = str(sheet.cell(row = i + 9, column = 20).value)
-    e = str(sheet.cell(row = i + 9, column = 21).value)
-    aout = get_sec(a)
-    bout = get_sec(b)
-    cout = get_sec(c)
-    dout = get_sec(d)
-    eout = get_sec(e)
-    try:
-        result = round(((aout + bout + cout + dout) / (eout - (breaklunch(eout/3600)*3600))) * 100, 2)
-    except TypeError:
-        result = None
-    print(result)
-    holder[name] = result
-    
-print(holder)
+for i in range(1, 75):
+    if sheet.cell(row = i + 9, column = 4).value != None:
+        name = str(sheet.cell(row = i + 9, column = 3).value)
+        a = str(sheet.cell(row = i + 9, column = 16).value)
+        b = str(sheet.cell(row = i + 9, column = 17).value)
+        c = str(sheet.cell(row = i + 9, column = 18).value)
+        d = str(sheet.cell(row = i + 9, column = 20).value)
+        e = str(sheet.cell(row = i + 9, column = 21).value)
+        aout = get_sec(a)
+        bout = get_sec(b)
+        cout = get_sec(c)
+        dout = get_sec(d)
+        eout = get_sec(e)
+        try:
+            result = round(((aout + bout + cout + dout) / (eout - (brkl(eout/3600)*3600))) * 100, 2)
+        except TypeError:
+            continue
+        dict1[name] = result
+
+
+dict2 =  {}
+
+
+for k, v, in dict1.items():
+    if v > 50:
+        dict2[k] = v
+
+
+sorted_dict2 = sorted(dict2.items(), key=operator.itemgetter(1))
+
+
+names = []
+results = []
+
+
+for a, b in sorted_dict2:
+    names.append(a)
+    results.append(b)
+
+
+# Plotting graph
+
+
+matplotlib.rcParams.update({'xtick.labelsize': 14})
+plt.figure(figsize=(22, 10))
+plt.bar(range(len(names)), results, edgecolor = 'black', color = 'blue', alpha = 0.7, linewidth = 3.0)
+
+
+ax = plt.subplot()
+ax.set_xticks(range(len(names)))
+ax.set_xticklabels(names)
+
+plt.ylabel('Efficiency')
+plt.xlabel('Colleague')
+plt.title('Weekly Efficiency 1-16-2018 to 1-18-2018')
+
+
+plt.axis(ymin = 50, ymax = 100)
+
+
+for tick in ax.get_xticklabels():
+    tick.set_rotation(90)
+
+
+plt.tight_layout()
+
+
+plt.savefig('Efficiency.png')
+
+
+plt.show()
