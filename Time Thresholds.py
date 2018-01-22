@@ -8,9 +8,9 @@ import operator
 style.use('fivethirtyeight')
 
 
-wb = openpyxl.load_workbook('Book1.xlsx')
-sheet = wb.get_sheet_by_name('Sheet_1')
-print("This sheet is titled {}.".format(sheet.title))
+wb2 = openpyxl.load_workbook('Book1.xlsx')
+sheet2 = wb2.get_sheet_by_name('Sheet_1')
+print("This sheet is titled {}.".format(sheet2.title))
 
 
 def get_sec(time_str):
@@ -69,13 +69,13 @@ dict1 = {}
 
 
 for i in range(1, 75):
-    if sheet.cell(row = i + 9, column = 4).value != None:
-        name = str(sheet.cell(row = i + 9, column = 3).value)
-        a = str(sheet.cell(row = i + 9, column = 16).value)
-        b = str(sheet.cell(row = i + 9, column = 17).value)
-        c = str(sheet.cell(row = i + 9, column = 18).value)
-        d = str(sheet.cell(row = i + 9, column = 20).value)
-        e = str(sheet.cell(row = i + 9, column = 21).value)
+    if sheet2.cell(row = i + 9, column = 4).value != None:
+        name = str(sheet2.cell(row = i + 9, column = 3).value)
+        a = str(sheet2.cell(row = i + 9, column = 16).value)
+        b = str(sheet2.cell(row = i + 9, column = 17).value)
+        c = str(sheet2.cell(row = i + 9, column = 18).value)
+        d = str(sheet2.cell(row = i + 9, column = 20).value)
+        e = str(sheet2.cell(row = i + 9, column = 21).value)
         aout = get_sec(a)
         bout = get_sec(b)
         cout = get_sec(c)
